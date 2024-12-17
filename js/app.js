@@ -22,6 +22,18 @@ function guardarCliente(){
         console.log('No hay campos vacios');
         
     }
+
+    // Asignar datos del formulario al objeto cliente
+    cliente = {...cliente, mesa, hora};
+    // console.log(cliente);
+
+    // Ocultar modal
+    const modalFormulario = document.querySelector('#formulario');
+    const modalBootsrap = bootstrap.Modal.getInstance(modalFormulario);
+    modalBootsrap.hide();
+    
+    // Mostar secciones
+    mostrarSecciones();
 }
 
 function imprimirAlerta(mensaje){
@@ -36,9 +48,14 @@ function imprimirAlerta(mensaje){
         setTimeout(() => {
             alerta.remove();
         }, 3000);
+
+        return;
     }
+}
 
-    
-    
-
+function mostrarSecciones(){
+    const seccionesOcultas = document.querySelectorAll('.d-none');
+    seccionesOcultas.forEach(seccion => {
+        seccion.classList.remove('d-none');
+    })
 }
