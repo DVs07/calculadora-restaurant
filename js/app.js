@@ -4,12 +4,17 @@ let cliente = {
     pedido: []
 };
 
-const btnGuardar = document.querySelector('#guardar-cliente');
+const categorias = {
+    1: 'Comida',
+    2: 'Bebidas',
+    3: 'Postres'
+}
 
+const btnGuardar = document.querySelector('#guardar-cliente');
+const formularioModal = document.querySelector('.modal-body form');
 btnGuardar.addEventListener('click', guardarCliente);
 
 function guardarCliente(){
-    // console.log('Desde la funcion guardarCliente');
     const mesa = document.querySelector('#mesa').value;
     const hora = document.querySelector('#hora').value;
 
@@ -20,20 +25,20 @@ function guardarCliente(){
         imprimirAlerta('Hay campos vacios');        
     }else{
         console.log('No hay campos vacios');
-        
     }
 
     // Asignar datos del formulario al objeto cliente
     cliente = {...cliente, mesa, hora};
-    // console.log(cliente);
 
     // Ocultar modal
     const modalFormulario = document.querySelector('#formulario');
-    const modalBootsrap = bootstrap.Modal.getInstance(modalFormulario);
-    modalBootsrap.hide();
-    
+    const modalBootstrap = bootstrap.Modal.getInstance(modalFormulario);
+    modalBootstrap.hide();
+    formularioModal.reset();
     // Mostar secciones
     mostrarSecciones();
+
+    obtenerDatos();
 }
 
 function imprimirAlerta(mensaje){
@@ -43,7 +48,7 @@ function imprimirAlerta(mensaje){
         const alerta = document.createElement('p');
         alerta.classList.add('bg-danger-subtle', 'text-center', 'p-2', 'text-danger','border', 'border-danger', 'rounded');
         alerta.textContent = mensaje;
-        document.querySelector('.modal-body form').appendChild(alerta);  
+        modalFormulario.appendChild(alerta);  
 
         setTimeout(() => {
             alerta.remove();
@@ -51,6 +56,7 @@ function imprimirAlerta(mensaje){
 
         return;
     }
+
 }
 
 function mostrarSecciones(){
@@ -58,4 +64,42 @@ function mostrarSecciones(){
     seccionesOcultas.forEach(seccion => {
         seccion.classList.remove('d-none');
     })
+}
+
+function obtenerDatos(){
+    const url = 'http://localhost:4000/platos';
+
+    fetch(url).then( respuesta => respuesta.json())
+    .then(resultado => mostrarPlatos(resultado))
+    .catch(error => console.log(error));
+}
+
+function mostrarPlatos(platos){
+    // console.log('Desde mostrarPlatos: ', platos);
+    const divPlatos = document.querySelector('#platos .contenido');
+
+    platos.forEach(plato => {
+        const row = document.createElement('div');
+        row.classList.add('row','py-3','border-top');
+
+        const nombre = document.createElement('div');
+        nombre.classList.add('col-md-4');
+        nombre.textContent = plato.nombre;
+
+        const precio = document.createElement('div');
+        precio.classList.add('col-md-3','fw-bold');
+        precio.textContent = `$ ${plato.precio}`;
+
+        const categoria = document.createElement('div');
+        categoria.classList.add('col-md-3');
+        categoria.textContent = categorias[plato.categoria];
+
+        row.appendChild(nombre);
+        row.appendChild(precio);
+        row.appendChild(categoria);
+
+        divPlatos.appendChild(row);
+
+    });
+    
 }
