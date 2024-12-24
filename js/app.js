@@ -132,7 +132,7 @@ function cerrarModal(modalElement, bootstrapModalInstance) {
     
     modalElement.addEventListener('hidden.bs.modal', () => {
     document.body.classList.remove('modal-open');
-     document.body.style.overflow = ''; // Restablecer overflow
+    document.body.style.overflow = ''; // Restablecer overflow
     
     const backdrop = document.querySelector('.modal-backdrop');
 
@@ -179,11 +179,14 @@ function agregarPlato(orden){
         cliente.pedido = [...resultado];
     }
 
-    // console.log('Pedido: ', cliente.pedido);
-    // Mostrar el Resumen
     limpiarHTML(divContenido);
-    actualizarResumen();
 
+    if(cliente.pedido.length === 0){
+        mensajeResumen();
+    }else{
+        actualizarResumen();
+    }
+    
 }
 
 function actualizarResumen(){
@@ -236,16 +239,23 @@ function actualizarResumen(){
         precioPlato.classList.add('fw-bold');
         precioPlato.textContent = `Precio: ${precio}`;
 
-        const totalPlato = document.createElement('p'); 
-        totalPlato.classList.add('fw-bold');        
-        totalPlato.textContent = `Total: ${cantidad * precio}`;
+        const subTotalPlato = document.createElement('p'); 
+        subTotalPlato.classList.add('fw-bold');        
+        subTotalPlato.textContent = calcularSubtotal(precio, cantidad, 'Subtotal');
+
+        const btnEliminar = document.createElement('button');
+        btnEliminar.classList.add('btn', 'btn-danger');
+        btnEliminar.textContent = 'Eliminar Plato';
+        btnEliminar.onclick = () => eliminarPlato(id);
 
         listaPlato.appendChild(nombrePlato);
         listaPlato.appendChild(cantidadPlato);
         listaPlato.appendChild(precioPlato);
-        listaPlato.appendChild(totalPlato);
-
+        listaPlato.appendChild(subTotalPlato);
+        listaPlato.appendChild(btnEliminar);
+        
         listaPlatos.appendChild(listaPlato);
+
 
     })
 
@@ -264,4 +274,37 @@ function limpiarHTML(elemento){
     while(elemento.firstChild){
         elemento.removeChild(elemento.firstChild);
     }
+}
+
+function calcularSubtotal(precio,cantidad,string ){
+    return `${string}: $ ${precio*cantidad}`
+}
+
+function eliminarPlato(id){
+    // console.log('Eliminando plato: ', id);
+    const {pedido} = cliente;
+    const resultado = pedido.filter(plato => plato.id !== id);
+    cliente.pedido = [...resultado];
+
+    limpiarHTML(divContenido);
+
+    if(cliente.pedido.length === 0){
+        mensajeResumen();
+    }else{
+        actualizarResumen();
+    }
+    
+    // Limpiar el input de un plato eliminado
+    const platoEliminado = `#producto-${id}`;
+    const inputPlatoEliminado = document.querySelector(platoEliminado);
+    inputPlatoEliminado.value = 0;
+}
+
+function mensajeResumen(){
+    const texto = document.createElement('p');
+
+    texto.classList.add('text-center', 'text-primary', 'fw-bold');
+    texto.textContent = 'No hay platos en tu pedido';
+    
+    divContenido.appendChild(texto);
 }
