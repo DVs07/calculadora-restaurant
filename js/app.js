@@ -15,6 +15,7 @@ const formularioModal = document.querySelector('.modal-body form');
 btnGuardar.addEventListener('click', guardarCliente);
 
 const divContenido = document.querySelector('#resumen .contenido');
+const divCuenta = document.createElement('div');
 
 function guardarCliente(){
     const mesa = document.querySelector('#mesa').value;
@@ -413,16 +414,18 @@ function calcularPropina(){
     const total = subtotal + propina;
     console.log('Total: ', total);
     
+    // Mostrar la cuenta
     mostrarCuenta(subtotal, propina, total);
 }
 
 function mostrarCuenta(subtotal, propina, total){
 
-    const divCuenta = document.createElement('div');
-    divCuenta.classList.add('col-md-6', 'total-pagar');
+    limpiarHTML(divCuenta);
+    
+    divCuenta.classList.add('col', 'total-pagar');
     // Subtotal
     const subtotalParrafo = document.createElement('p');
-    subtotalParrafo.classList.add('fw-bold', 'mt-2', 'fs-4');
+    subtotalParrafo.classList.add('fw-bold', 'mt-2', 'fs-4', 'border-top', 'pt-2');
     subtotalParrafo.textContent = 'Subtotal: ';
 
     const subtotalSpan = document.createElement('span');
@@ -446,7 +449,7 @@ function mostrarCuenta(subtotal, propina, total){
 
     // Total
     const totalParrafo = document.createElement('p');
-    totalParrafo.classList.add('fw-bold', 'mt-2', 'fs-4');
+    totalParrafo.classList.add('fw-bold', 'mt-2', 'fs-4', 'border-top', 'pt-2');
     totalParrafo.textContent = 'Total: ';
 
     const totalSpan = document.createElement('span');
@@ -457,7 +460,8 @@ function mostrarCuenta(subtotal, propina, total){
     divCuenta.appendChild(totalParrafo);
 
     const form =document.querySelector('.formulario > div');
-    form.appendChild(divCuenta);
 
-    
+
+    // Cada vez que selecciono una propina, se limpia el HTML del divCuenta con la funcion limpiarHTML()
+    form.appendChild(divCuenta);    
 }
