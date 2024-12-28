@@ -71,7 +71,7 @@ function mostrarSecciones(){
 }
 
 function obtenerDatos(){
-    const url = 'http://localhost:4000/platos';
+    const url = 'https://my-json-server.typicode.com/DVs07/restaurant/platos'; // API 
 
     fetch(url).then( respuesta => respuesta.json())
     .then(resultado => mostrarPlatos(resultado))
