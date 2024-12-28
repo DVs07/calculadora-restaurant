@@ -7,7 +7,8 @@ let cliente = {
 const categorias = {
     1: 'Comida',
     2: 'Bebidas',
-    3: 'Postres'
+    3: 'Guarniciones',
+    4: 'Postres',
 }
 
 const btnGuardar = document.querySelector('#guardar-cliente');
