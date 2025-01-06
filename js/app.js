@@ -71,12 +71,17 @@ function mostrarSecciones(){
     })
 }
 
-function obtenerDatos(){
+async function obtenerDatos(){
     const url = 'https://my-json-server.typicode.com/DVs07/restaurant/platos'; // API 
 
-    fetch(url).then( respuesta => respuesta.json())
-    .then(resultado => mostrarPlatos(resultado))
-    .catch(error => console.log(error));
+    try {
+        const respuesta = await fetch(url);
+        const resultado = await respuesta.json();
+
+        mostrarPlatos(resultado);   
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 function mostrarPlatos(platos){
